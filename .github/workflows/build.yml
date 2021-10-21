@@ -57,3 +57,34 @@ jobs:
         uses: Azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy Staging Azure WebApp 🎭
+        uses: Azure/webapps-deploy@v2
+        with:
+          # Name of the Azure Web App
+          app-name: GithubWorkshop98771496
+          # Enter an existing Slot other than the Production slot
+          slot-name: staging # optional, default is production
+          # Applies to Web App Containers only: Specify the fully qualified container image(s) name. 
+          images: ${{ secrets.ACR_SERVER }}/eshop:${{ github.run_id }}
+  
+  deployProduction:
+    runs-on: ubuntu-latest
+    needs: deployStaging
+    environment: production
+    steps:
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy Staging Azure WebApp 🎭
+        uses: Azure/webapps-deploy@v2
+        with:
+          # Name of the Azure Web App
+          app-name: GithubWorkshop98771496
+          # Enter an existing Slot other than the Production slot
+          slot-name: staging # optional, default is production
+          # Applies to Web App Containers only: Specify the fully qualified container image(s) name. 
+          images: ${{ secrets.ACR_SERVER }}/eshop:${{ github.run_id }}
+      - name: Swap Staging to Production
+        run: |
+          az webapp deployment slot swap --name GithubWorkshop98771496 --resource-group GithubWorkshop98771496 --slot staging --target-slot production
