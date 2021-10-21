@@ -47,3 +47,13 @@ jobs:
     - run: |
         docker build -f src/Web/Dockerfile . -t ${{ secrets.ACR_SERVER }}/eshop:${{ github.run_id }}
         docker push ${{ secrets.ACR_SERVER }}/eshop:${{ github.run_id }}
+  
+  deployStaging:
+    runs-on: ubuntu-latest
+    needs: imageBuildAndPush
+    environment: staging
+    steps:
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
