@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-
+    name: Build .NET App
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
       with:
